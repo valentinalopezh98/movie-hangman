@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import MovieTitle from "./components/MovieTitle";
-import Chars from "./components/Chars";
-import {letters as letterData} from "./data/letters"
+import Letters from "./components/Letters";
+import { letters as letterData } from "./data/letters";
 
 function App() {
   const [movieData, setMovieData] = useState(null);
   const [progress, setProgress] = useState([]);
-  const [letters, setLetters] = useState([])
+  const [movieTitle, setMovieTitle] = useState([]);
+  const [letters, setLetters] = useState([]);
+  const [win, setWin] = useState(false)
 
   useEffect(() => {
-    setLetters([...letterData])
+    setLetters([...letterData]);
     fetch("/movies.json")
       .then((res) => res.json())
       .then((movies) =>
@@ -19,18 +21,56 @@ function App() {
 
   useEffect(() => {
     if (movieData) {
-      const progressArray = movieData.title.split("");
-      setProgress(progressArray)
+      setMovieTitle(movieData.title.toUpperCase().split(""));
     }
   }, [movieData]);
 
-if(movieData)
-  console.log(movieData.title)
+  useEffect(() => {
+    const userProgress = [...movieTitle];
+    for (let i = 0; i < userProgress.length; i++) {
+      if (/^[a-zA-Z0-9]$/.test(userProgress[i])) {
+        userProgress[i] = "_";
+      }
+    }
+    setProgress(userProgress);
+  }, [movieTitle]);
+
+  useEffect(()=>{
+    setWin(checkWin())
+  },[progress])
+
+  function checkWin(){
+    for (let i = 0; i < movieTitle.length; i++) {
+      if (movieTitle[i] === progress[i]){
+        return false;
+      }     
+    }
+    return true
+  }
+
+  function validateLetter(value) {
+    if (movieTitle.includes(value)){
+      console.log(true)
+      const userProgress = [...progress]
+      for (let i = 0; i < movieTitle.length; i++) {
+        if (movieTitle[i] === value) {
+          userProgress[i] = value
+        }
+      }
+      setProgress(userProgress)
+    }
+  }
+
+  if (movieData) {
+    console.log(movieData.title);
+    console.log(progress);
+  }
+
   return (
     <>
       <h1>Movie hangman</h1>
-      <MovieTitle progress={progress}/>
-      <Chars letters={letters}/>
+      <MovieTitle progress={progress} />
+      <Letters letters={letters} validateLetter={validateLetter} />
     </>
   );
 }
