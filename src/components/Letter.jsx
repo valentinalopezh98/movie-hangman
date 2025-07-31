@@ -1,7 +1,7 @@
-function Letter({value, validateLetter}) {
-
+function Letter({value, validateLetter, clicked}) {
+  
   return (
-    <button onClick={()=>{validateLetter(value)}}>{value}</button>
+    <button disabled={clicked} onClick={()=>{validateLetter(value)}}>{value}</button>
   )
 }
 
