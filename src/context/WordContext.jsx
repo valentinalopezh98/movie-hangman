@@ -116,6 +116,7 @@ export function WordContextProvider(props) {
         started,
         finalResult,
         first,
+        movieData
       }}
     >
       {props.children}
