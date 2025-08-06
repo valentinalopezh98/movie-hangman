@@ -78,6 +78,20 @@ export function WordContextProvider(props) {
   }
 
   useEffect(() => {
+    if (!started) return;
+    const handleKeyDown = (e) => {
+      if (/^[a-zA-Z0-9]$/.test(e.key)) {
+        validateLetter(e.key.toUpperCase());
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return ()=>{
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [started, validateLetter]);
+
+  useEffect(() => {
     if (started) {
       setLetters([...letterData]);
       fetch("/movies.json")
@@ -116,7 +130,7 @@ export function WordContextProvider(props) {
         started,
         finalResult,
         first,
-        movieData
+        movieData,
       }}
     >
       {props.children}

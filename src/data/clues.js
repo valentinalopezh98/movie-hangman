@@ -2,7 +2,7 @@ export const clues = [
   {
     value: 1,
     clicked: false,
-    available: false
+    available: true
   },
    {
     value: 2,
