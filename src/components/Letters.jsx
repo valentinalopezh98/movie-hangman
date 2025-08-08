@@ -7,7 +7,7 @@ export default function Letters() {
 
   if (letters) {
     return (
-      <div>
+      <div className="flex flex-wrap gap-1.5 px-2 justify-center">
         {letters.map((l) => (
           <Letter
             key={l.value}

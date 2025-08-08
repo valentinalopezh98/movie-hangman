@@ -5,28 +5,32 @@ import Errors from "./components/Errors";
 import PlayBtn from "./components/PlayBtn";
 import { useContext } from "react";
 import { WordContext } from "./context/WordContext";
-import Clues from './components/Clues'
+import Clues from "./components/Clues";
+import Header from "./components/Header";
+import image from "./assets/hero.png";
+import LanguageBtn from './components/LanguageBtn'
 
 function App() {
   const { startGame, started, first } = useContext(WordContext);
 
-
   if (!started && first) {
     return (
       <>
-        <h1>Movie hangman</h1>
-        <PlayBtn onClick={startGame}>Play</PlayBtn>
+        <Header />
+        <LanguageBtn/>
+        <img src={image} className="size-50" />
+        <PlayBtn onClick={startGame}>Jugar</PlayBtn>
       </>
     );
   } else {
     return (
       <>
-        <h1>Movie hangman</h1>
+        <Header />
         <MovieTitle />
         <Errors />
+        <Clues />
         <Letters />
         <Result />
-        <Clues/>
       </>
     );
   }

@@ -13,6 +13,7 @@ export function WordContextProvider(props) {
   const [errors, setErrors] = useState(0);
   const [started, setStarted] = useState(false);
   const [first, setFirst] = useState(true);
+  const [language, setLanguage] = useState("spanish");
 
   useEffect(() => {
     if (movieData) {
@@ -54,6 +55,14 @@ export function WordContextProvider(props) {
     return "won";
   }
 
+  function toggleLanguage() {
+    if (language === "spanish") {
+      setLanguage("english");
+    } else {
+      setLanguage("spanish");
+    }
+  }
+
   function validateLetter(value) {
     const updatedLetters = letters.map((letter) =>
       letter.value === value ? { ...letter, clicked: true } : letter
@@ -86,19 +95,27 @@ export function WordContextProvider(props) {
     };
     window.addEventListener("keydown", handleKeyDown);
 
-    return ()=>{
-      window.removeEventListener("keydown", handleKeyDown)
-    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [started, validateLetter]);
 
   useEffect(() => {
     if (started) {
       setLetters([...letterData]);
+      if (language === "english"){
       fetch("/movies.json")
         .then((res) => res.json())
         .then((movies) =>
           setMovieData(movies[Math.floor(Math.random() * movies.length)])
-        );
+        )
+      } else {
+        fetch("/moviesES.json")
+        .then((res) => res.json())
+        .then((movies) =>
+          setMovieData(movies[Math.floor(Math.random() * movies.length)])
+        )
+      }
       setFinalResult("default");
       setErrors(0);
     }
@@ -131,6 +148,8 @@ export function WordContextProvider(props) {
         finalResult,
         first,
         movieData,
+        toggleLanguage,
+        language,
       }}
     >
       {props.children}
